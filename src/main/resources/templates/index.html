@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Statistics</title>
+</head>
+<body>
+
+
+	<div id="root"></div>
+
+<script src="//unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+<script src="//unpkg.com/react/umd/react.development.js"></script>
+<script src="//unpkg.com/react-dom/umd/react-dom.development.js"></script>
+<script src="//unpkg.com/axios/dist/axios.min.js"></script>
+
+<script type="text/babel">
+function generateTable(data) {
+
+    function Table() {
+
+      const rows = Object.keys(data).map((k) => {
+        return ( 
+          <tr key={k}>
+            <td key={k}>{k}</td>
+            <td key={data[k]}>{data[k]}</td> 
+          </tr>
+        );
+      });
+      
+      return (
+        <table>
+            <thead><tr><th>Link</th><th>Visits</th></tr></thead>
+            <tbody>{rows}</tbody>
+        </table>
+      );
+    }
+
+  ReactDOM.render(
+    <Table />,
+    document.getElementById('root')
+  );
+
+}
+
+function getTableData() {
+    axios.get('http://localhost:8080/statistics/Dolores')
+    .then(function(response) {
+      generateTable(response.data);
+    }).catch(function(error) {
+      console.log(error);
+    });
+}
+
+// Main
+getTableData();
+</script>
+
+</body>
+</html>

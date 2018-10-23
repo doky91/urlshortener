@@ -5,6 +5,11 @@ public class UrlRequest {
 	private String url;
 	private Integer redirectType;
 	
+
+	public UrlRequest() {
+		super();
+	}
+
 	public UrlRequest(String url, Integer redirectType) {
 		this.url = url;
 		this.redirectType = redirectType;
