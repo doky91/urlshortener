@@ -11,3 +11,12 @@ create table demo.autorities(
 	authority varchar(50),
 	constraint ft_autorities_users foreign key (username) references users(username)
 );
+
+create table demo.links(
+	url varchar(300),
+	short_url varchar(50),
+	link_visits int,
+	redirect_type int,
+	user varchar(50),
+	constraint ft_links_users foreign key (user) references users(username)
+);

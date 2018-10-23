@@ -30,7 +30,7 @@ public class UserJdbcRepository {
 	}
 
 	public int insert(User user) {
-		return jdbcTemplate.update("insert into demo.users (username, password, enabled) " + " values( ?, ?,?)",
+		return jdbcTemplate.update("insert into demo.users (username, password, enabled) " + " values(?, ?, ?)",
 				new Object[] { user.getUsername(), user.getPassword(), user.isEnabled() });
 	}
 

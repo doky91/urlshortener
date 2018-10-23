@@ -1,7 +1,5 @@
 package hr.dskugor.urlshortener.controllers;
 
-import java.security.SecureRandom;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,53 +10,54 @@ import hr.dskugor.urlshortener.models.AccountRequest;
 import hr.dskugor.urlshortener.models.AccountResponse;
 import hr.dskugor.urlshortener.models.User;
 import hr.dskugor.urlshortener.repositories.UserJdbcRepository;
+import hr.dskugor.urlshortener.utils.RandomStringGenerator;
 
 @RestController
-public class AccountResponseController {
+public class AccountController {
 
 	@Autowired
-	UserJdbcRepository userRepository;
+	private UserJdbcRepository userRepository;
+
+	@Autowired
+	private RandomStringGenerator generator;
 
 	@RequestMapping(value = "/account", method = RequestMethod.POST)
 	public AccountResponse account(@RequestBody(required = false) AccountRequest accRequest) {
 
 		AccountResponse accResponse = new AccountResponse();
+		User user;
 
 		if (accRequest == null || accRequest.getAccountId().equals("")) {
 			accResponse.setDescription("No valid account id provided!");
 			return accResponse;
 		}
+		
+		user = userRepository.findByUsername(accRequest.getAccountId());
 
-		if (userRepository.findByUsername(accRequest.getAccountId()) != null) {
+		if (user != null) {
 			accResponse.setSuccess(false);
 			accResponse.setDescription("User with ID : " + accRequest.getAccountId() + " already exists!");
+			return accResponse;
 		}
 
-		else {
-			User user = new User();
-			accResponse.setSuccess(true);
-			accResponse.setDescription("Your account is open");
-			String password = passwordGenerator();
-			accResponse.setPassword(password);
-			user.setPassword(password);
-			user.setUsername(accRequest.getAccountId());
-			user.setEnabled(true);
-			userRepository.insert(user);
-		}
+		user = setUser(accRequest);
+		accResponse.setSuccess(true);
+		accResponse.setDescription("Your account is open");
+		accResponse.setPassword(user.getPassword());
+
 		return accResponse;
-
 	}
 
-	private String passwordGenerator() {
+	private User setUser(AccountRequest accRequest) {
 
-		final String allPossibleValues = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-		final SecureRandom rnd = new SecureRandom();
+		User user = new User();
 
-		StringBuilder sb = new StringBuilder(8);
-		for (int i = 0; i < 8; i++)
-			sb.append(allPossibleValues.charAt(rnd.nextInt(allPossibleValues.length())));
-
-		return sb.toString();
-
+		String password = generator.generateString();
+		user.setPassword(password);
+		user.setUsername(accRequest.getAccountId());
+		user.setEnabled(true);
+		userRepository.insert(user);
+		return user;
 	}
+
 }
