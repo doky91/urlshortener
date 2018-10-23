@@ -30,10 +30,25 @@ public class LinkJdbcRepository {
 		}
 	}
 
-	public int insert(Link link) {
-		return jdbcTemplate.update("insert into demo.links (url, short_url, user, link_visits) " + " values( ?, ?, ?, ?)",
-				new Object[] { link.getUrl(), link.getShortUrl(), link.getUser(), link.getLinkVisits() });
-
+	public Link findByShortUrl(String url) {
+		try {
+			return jdbcTemplate.queryForObject("select * from demo.links where short_url=?", new Object[] { url },
+					new BeanPropertyRowMapper<Link>(Link.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
+	public int insert(Link link) {
+		return jdbcTemplate.update(
+				"insert into demo.links (url, short_url, user, redirect_type,  link_visits) "
+						+ " values( ?, ?, ?, ?, ?)",
+				new Object[] { link.getUrl(), link.getShortUrl(), link.getUser(), link.getRedirectType(),
+						link.getLinkVisits() });
+	}
+
+	public int incrementLinkVisits(Link link) {
+		return jdbcTemplate.update("update demo.links " + " set link_visits = link_visits+1 " + " where url = ?",
+				new Object[] { link.getUrl() });
+	}
 }
