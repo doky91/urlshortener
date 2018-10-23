@@ -39,6 +39,15 @@ public class LinkJdbcRepository {
 		}
 	}
 
+	public List<Link> findByUser(String user) {
+		try {
+			return jdbcTemplate.query("select * from demo.links where user=?", new Object[] { user },
+					new LinkMapper());
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+	
 	public int insert(Link link) {
 		return jdbcTemplate.update(
 				"insert into demo.links (url, short_url, user, redirect_type,  link_visits) "
