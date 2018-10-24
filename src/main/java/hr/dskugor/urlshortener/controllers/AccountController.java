@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hr.dskugor.urlshortener.models.AccountRequest;
 import hr.dskugor.urlshortener.models.AccountResponse;
+import hr.dskugor.urlshortener.models.Authority;
 import hr.dskugor.urlshortener.models.User;
+import hr.dskugor.urlshortener.repositories.AuthorityRepository;
 import hr.dskugor.urlshortener.repositories.UserJdbcRepository;
 import hr.dskugor.urlshortener.utils.RandomStringGenerator;
 
@@ -17,6 +19,9 @@ public class AccountController {
 
 	@Autowired
 	private UserJdbcRepository userRepository;
+	
+	@Autowired
+	private AuthorityRepository authorityRepository;
 
 	@Autowired
 	private RandomStringGenerator generator;
@@ -27,7 +32,7 @@ public class AccountController {
 		AccountResponse accResponse = new AccountResponse();
 		User user;
 
-		if (accRequest == null || accRequest.getAccountId().equals("")) {
+		if (accRequest == null || accRequest.getAccountId().equals("") ) {
 			accResponse.setDescription("No valid account id provided!");
 			return accResponse;
 		}
@@ -51,12 +56,17 @@ public class AccountController {
 	private User setUser(AccountRequest accRequest) {
 
 		User user = new User();
-
+		Authority authority = new Authority();
 		String password = generator.generateString();
 		user.setPassword(password);
 		user.setUsername(accRequest.getAccountId());
 		user.setEnabled(true);
 		userRepository.insert(user);
+		
+		authority.setUsername(accRequest.getAccountId());
+		authority.setAuthority("ROLE_USER");
+		authorityRepository.insert(authority);
+		
 		return user;
 	}
 

@@ -6,7 +6,7 @@ create table demo.users(
 	enabled boolean not null
 );
 
-create table demo.autorities(
+create table demo.authorities(
 	username varchar(50),
 	authority varchar(50),
 	constraint ft_autorities_users foreign key (username) references users(username)
