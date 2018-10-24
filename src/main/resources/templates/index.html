@@ -5,56 +5,33 @@
 <title>Statistics</title>
 </head>
 <body>
+<h1> REST test </h1>
+<hr />
 
+<h2> Opening of accounts </h2>
+<div id="accounts"></div>
+<div id="accounts_output"></div>
+<hr />
 
-	<div id="root"></div>
+<h2> Registration of url </h2>
+<div id="registration"></div>
+<div id="registration_output"></div>
+<hr />
+
+<h2> Retrival of statistics </h2>
+<div id="statistics"></div>
+<div id="statistics_output"></div>
+<hr />
 
 <script src="//unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
 <script src="//unpkg.com/react/umd/react.development.js"></script>
 <script src="//unpkg.com/react-dom/umd/react-dom.development.js"></script>
 <script src="//unpkg.com/axios/dist/axios.min.js"></script>
+<script src="js/accounts.js" type="text/babel"></script>
+<script src="js/statistics.js" type="text/babel"></script>
+<script src="js/registration.js" type="text/babel"></script>
 
-<script type="text/babel">
-function generateTable(data) {
 
-    function Table() {
-
-      const rows = Object.keys(data).map((k) => {
-        return ( 
-          <tr key={k}>
-            <td key={k}>{k}</td>
-            <td key={data[k]}>{data[k]}</td> 
-          </tr>
-        );
-      });
-      
-      return (
-        <table>
-            <thead><tr><th>Link</th><th>Visits</th></tr></thead>
-            <tbody>{rows}</tbody>
-        </table>
-      );
-    }
-
-  ReactDOM.render(
-    <Table />,
-    document.getElementById('root')
-  );
-
-}
-
-function getTableData() {
-    axios.get('http://localhost:8080/statistics/Dolores')
-    .then(function(response) {
-      generateTable(response.data);
-    }).catch(function(error) {
-      console.log(error);
-    });
-}
-
-// Main
-getTableData();
-</script>
 
 </body>
 </html>
