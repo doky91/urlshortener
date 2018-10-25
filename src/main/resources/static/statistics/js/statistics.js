@@ -31,7 +31,10 @@ function generateTable(data) {
 function getTableData(state) {
 	var basicAuth = 'Basic ' + btoa(unescape(encodeURIComponent(state["username"] + ':' + state["password"])));
 	
-	axios.get('http://localhost:8080/statistic/' + state["accountId"],  {
+	var urlParts = window.location.href.split('/')
+	var accountId = urlParts[urlParts.length-1];
+	
+	axios.get('http://localhost:8080/statistic/' + accountId,  {
 		  headers: { 'Authorization': basicAuth }
 	})
 	.then(function(response) {
@@ -45,8 +48,7 @@ function StatisticsForm(){
 
 	var state= {
 		"username": "",
-		"password": "",
-		"accountId": ""
+		"password": ""
 	};
 
 	function handleChange(event) {
@@ -66,8 +68,6 @@ function StatisticsForm(){
 			<input type="text" name="username" onChange={handleChange} /> <br />
 			<label>Password:</label> 
 			<input type="password" name="password" onChange={handleChange} /> <br />
-			<label>Account id:</label>
-			<input type="text" name="accountId" onChange={handleChange} />
 			<input type="submit" value="Submit" />
 		</form>
 	);

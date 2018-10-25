@@ -3,8 +3,13 @@
  */
 
 function AccountForm(){
-
-	var state= {};
+	
+	var state= {
+		"username": "",
+		"password": "",
+		"url": "",
+		"redirectType": ""
+	};
 
 	function handleChange(event) {
 		const name = event.target.name;
@@ -13,9 +18,14 @@ function AccountForm(){
 	}
 
 	function handleSubmit(event) {
+		
+		var basicAuth = 'Basic ' + btoa(unescape(encodeURIComponent(state["username"] + ':' + state["password"])));
+		
 		axios.post('http://localhost:8080/register', {
 			url: state["url"],
 			redirectType: state["redirectType"] 
+		}, {
+			  headers: { 'Authorization': basicAuth }
 		})
 		.then(function (response) {
 			ReactDOM.render(

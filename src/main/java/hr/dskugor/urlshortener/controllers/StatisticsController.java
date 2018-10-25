@@ -18,7 +18,7 @@ public class StatisticsController {
 	@Autowired
 	private LinkJdbcRepository linkRepository;
 
-	@RequestMapping(value = "/statistics/{accountId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/statistic/{accountId}", method = RequestMethod.GET)
 	public Map<String, Integer> redirectUrl(@PathVariable final String accountId) {
 		Map<String, Integer> statistics = new HashMap<String, Integer>();
 

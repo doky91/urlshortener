@@ -4,7 +4,9 @@
 
 function AccountForm(){
 
-	var state= {};
+	var state= {
+		"accountId": ""
+	};
 
 	function handleChange(event) {
 		const name = event.target.name;

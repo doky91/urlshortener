@@ -1,9 +1,13 @@
 package hr.dskugor.urlshortener.controllers;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,12 +36,12 @@ public class URLController {
 	private RandomStringGenerator generator;
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public UrlResponse shorterUrl(@RequestBody UrlRequest urlRequest) {
+	public UrlResponse shorterUrl(@RequestHeader("Authorization") String authToken, @RequestBody UrlRequest urlRequest) {
 
 		UrlResponse urlResponse = new UrlResponse();
 
 		Link link = linkRepository.findByUrl(urlRequest.getUrl());
-
+		
 		if (urlRequest == null || urlRequest.getUrl().equals("")) {
 			urlResponse.setSuccess(false);
 			urlResponse.setDescription("No valid url provided!");
@@ -55,7 +59,8 @@ public class URLController {
 		}
 
 		if (link == null) {
-			link = setLink(urlRequest);
+			User user = extractUserFromHeader(authToken);
+			link = setLink(urlRequest, user);
 			urlResponse.setDescription("Your URL is shorten!");
 		}
 
@@ -69,12 +74,7 @@ public class URLController {
 		return urlResponse;
 	}
 
-	private Link setLink(UrlRequest urlRequest) {
-		// --- for testing purposes
-		User user = new User();
-		user.setUsername("Dolores");
-		userRepository.insert(user);
-		// ---
+	private Link setLink(UrlRequest urlRequest, User user) {
 
 		Link link = new Link();
 
@@ -89,6 +89,18 @@ public class URLController {
 		linkRepository.insert(link);
 
 		return link;
+	}
+	
+	private User extractUserFromHeader(String authToken) {
+		
+		String base64Credentials = authToken.substring("Basic".length()).trim();
+		byte[] decodedAuthToken = Base64.getDecoder().decode(base64Credentials);
+		
+		String credentials = new String(decodedAuthToken, StandardCharsets.UTF_8);
+		final String[] values = credentials.split(":", 2);
+		
+		return userRepository.findByUsername(values[0]);		
+		
 	}
 
 }

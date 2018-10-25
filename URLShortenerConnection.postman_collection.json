@@ -1,0 +1,108 @@
+{
+	"variables": [],
+	"info": {
+		"name": "URLShortenerConnection",
+		"_postman_id": "a0b35531-4698-2abc-dedb-d41eb2304f5e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Account succesfull",
+			"request": {
+				"url": "localhost:8080/account",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"accountId\": \"1\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Account unsuccesfull",
+			"request": {
+				"url": "localhost:8080/account",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Register url - redirect type wrong",
+			"request": {
+				"url": "http://localhost:8080/register",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"url\": \"https://www.ebay.com/itm/Soft-Shell-Gel-Slim-Painted-TPU-Case-Cover-For-Lenovo-A2020-A1010-Silicone/152529196385?hash=item238372d561:m:mAdAF12HAw7jsYIs5EczVBA\",\r\n     \"redirectType\":303\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Register url - success",
+			"request": {
+				"url": "http://localhost:8080/register",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"url\": \"https://www.ebay.com/itm/Soft-Shell-Gel-Slim-Painted-TPU-Case-Cover-For-Lenovo-A2020-A1010-Silicone/152529196385?hash=item238372d561:m:mAdAF12HAw7jsYIs5EczVBA\",\r\n     \"redirectType\":301\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Statistics retrieval successfull",
+			"request": {
+				"url": "localhost:8080/statistic/abc",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWJjOmRxUVNQS2Ez",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
